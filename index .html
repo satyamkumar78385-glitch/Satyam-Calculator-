@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Smart Calculator</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #eef2ff;
+    color: #111827;
+}
+
+/* HEADER */
+
+.header {
+    background: #4f46e5;
+    color: white;
+    text-align: center;
+    padding: 18px 10px;
+    position: relative;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 27px;
+    font-weight: bold;
+}
+
+.header p {
+    margin: 7px 0 0;
+}
+
+/* SETTINGS */
+
+.settings-btn {
+    position: absolute;
+    right: 12px;
+    top: 17px;
+    width: auto;
+    margin: 0;
+    padding: 9px 12px;
+    background: white;
+    color: black;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* CONTAINER */
+
+.container {
+    max-width: 500px;
+    margin: auto;
+    padding: 15px;
+}
+
+/* CARDS */
+
+.card {
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 18px;
+    border: 2px solid black;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+.card h2,
+.card h3 {
+    color: black;
+    font-weight: bold;
+}
+
+/* COLORS */
+
+.percentage-card {
+    background: #ffd43b;
+}
+
+.discount-card {
+    background: #ff0000;
+}
+
+.price-card {
+    background: #6ee7a8;
+}
+
+.age-card {
+    background: #60a5fa;
+}
+
+.normal-card {
+    background: #111111;
+    color: white;
+}
+
+.normal-card h2 {
+    color: white;
+}
+
+/* INPUT BOX */
+
+input {
+    width: 100%;
+    padding: 13px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 2px solid black;
+    font-size: 16px;
+    background: white;
+    color: black;
+}
+
+input::placeholder {
+    color: #555;
+}
+
+/* ALL MAIN BUTTONS */
+
+button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 2px solid black;
+    background: black;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* NORMAL CALCULATOR BUTTONS RED */
+
+.normal-card button {
+    background: #ff0000;
+    color: white;
+    border: 2px solid black;
+}
+
+/* RESULT */
+
+.result {
+    margin-top: 15px;
+    padding: 13px;
+    background: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 1.8;
+    color: black;
+    font-weight: bold;
+}
+
+/* SETTINGS PANEL */
+
+.settings-panel {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 88%;
+    max-width: 370px;
+    height: 100%;
+    background: white;
+    color: black;
+    z-index: 1000;
+    padding: 25px;
+    box-shadow: -5px 0 20px rgba(0,0,0,0.25);
+    overflow-y: auto;
+}
+
+.settings-panel h2 {
+    margin-top: 0;
+}
+
+/* SETTINGS ITEMS */
+
+.settings-item {
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 12px;
+    background: #eef2ff;
+}
+
+/* SETTINGS BUTTONS */
+
+.share-btn {
+    background: #10b981;
+}
+
+.rate-btn {
+    background: #8b5cf6;
+}
+
+.contact-btn {
+    background: #2563eb;
+}
+
+.reset-btn {
+    background: #f59e0b;
+    color: black;
+}
+
+.close-btn {
+    background: #ef4444;
+}
+
+/* ABOUT */
+
+.about-box {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 12px;
+    background: #eef2ff;
+    color: black;
+    line-height: 1.7;
+}
+
+/* VERSION */
+
+.version {
+    text-align: center;
+    margin-top: 18px;
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* OVERLAY */
+
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 999;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<div class="header">
+
+<button class="settings-btn"
+onclick="openSettings()">
+⚙️
+</button>
+
+<h1>Smart Calculator</h1>
+
+<p>
+Percentage • Discount • Price • Age • Calculator
+</p>
+
+</div>
+
+
+<!-- OVERLAY -->
+
+<div class="overlay"
+id="overlay"
+onclick="closeSettings()">
+</div>
+
+
+<!-- SETTINGS -->
+
+<div class="settings-panel"
+id="settingsPanel">
+
+<h2>⚙️ Settings</h2>
+
+<div class="settings-item">
+
+<button onclick="toggleDarkMode()">
+🌙 Dark Mode
+</button>
+
+</div>
+
+<div class="settings-item">
+
+<button onclick="lightMode()">
+☀️ Light Mode
+</button>
+
+</div>
+
+<div class="settings-item">
+
+<button class="share-btn"
+onclick="shareApp()">
+🔗 Share App
+</button>
+
+</div>
+
+<div class="settings-item">
+
+<button class="rate-btn"
+onclick="rateApp()">
+⭐ Rate App
+</button>
+
+</div>
+
+<div class="settings-item">
+
+<button class="contact-btn"
+onclick="contactDeveloper()">
+📧 Contact Developer
+</button>
+
+</div>
+
+
+<!-- ABOUT -->
+
+<div class="about-box">
+
+<h2>About Us</h2>
+
+<p>
+<strong>Smart Calculator</strong>
+</p>
+
+<p>
+Developed by
+<strong>Mr. SATYAM KUMAR</strong>
+</p>
+
+<p>
+<strong>Software Developer</strong>
+</p>
+
+<p>
+Contact Me:
+<br>
+
+<strong>
+satyamkumar78385@gmail.com
+</strong>
+
+</p>
+
+</div>
+
+
+<div class="settings-item">
+
+<button class="reset-btn"
+onclick="resetSettings()">
+
+🔄 Reset Settings
+
+</button>
+
+</div>
+
+
+<div class="version">
+
+Smart Calculator
+<br>
+Version 1.0.0
+
+</div>
+
+
+<button class="close-btn"
+onclick="closeSettings()">
+
+Close Settings
+
+</button>
+
+</div>
+
+
+<!-- MAIN CONTAINER -->
+
+<div class="container">
+
+
+<!-- PERCENTAGE -->
+
+<div class="card percentage-card">
+
+<h2>
+📊 Percentage Calculator
+</h2>
+
+<input type="number"
+id="totalMarks"
+placeholder="Enter Total Marks">
+
+<input type="number"
+id="obtainedMarks"
+placeholder="Enter Obtained Marks">
+
+<input type="number"
+id="percentageInput"
+placeholder="Enter Percentage (%)">
+
+<button onclick="calculatePercentage()">
+
+Calculate Percentage
+
+</button>
+
+<div class="result"
+id="percentageResult">
+
+Result will appear here
+
+</div>
+
+</div>
+
+
+<!-- DISCOUNT -->
+
+<div class="card discount-card">
+
+<h2>
+🏷️ Discount Calculator
+</h2>
+
+<input type="number"
+id="price"
+placeholder="Enter Original Price ₹">
+
+<input type="number"
+id="discount"
+placeholder="Enter Discount (%)">
+
+<button onclick="calculateDiscount()">
+
+Calculate Discount
+
+</button>
+
+<div class="result"
+id="discountResult">
+
+Result will appear here
+
+</div>
+
+</div>
+
+
+<!-- PRICE -->
+
+<div class="card price-card">
+
+<h2>
+🛒 Price per Kilogram
+</h2>
+
+<h3>
+Calculate Price for Grams
+</h3>
+
+<input type="number"
+id="kgPrice"
+placeholder="Price for 1 Kilogram ₹">
+
+<input type="number"
+id="grams"
+placeholder="Enter Grams">
+
+<button onclick="calculateGramPrice()">
+
+Calculate Price
+
+</button>
+
+<div class="result"
+id="gramResult">
+
+Result will appear here
+
+</div>
+
+
+<h3>
+Calculate Grams for Money
+</h3>
+
+<input type="number"
+id="kgPrice2"
+placeholder="Price for 1 Kilogram ₹">
+
+<input type="number"
+id="money"
+placeholder="Enter Amount ₹">
+
+<button onclick="calculateMoneyToGram()">
+
+Calculate Grams
+
+</button>
+
+<div class="result"
+id="moneyResult">
+
+Result will appear here
+
+</div>
+
+</div>
+
+
+<!-- AGE -->
+
+<div class="card age-card">
+
+<h2>
+🎂 Age Calculator
+</h2>
+
+<input type="date"
+id="dateOfBirth">
+
+<input type="date"
+id="calculateDate">
+
+<button onclick="setToday()">
+
+Use Today's Date
+
+</button>
+
+<button onclick="calculateAge()">
+
+Calculate Age
+
+</button>
+
+<div class="result"
+id="ageResult">
+
+Age will appear here
+
+</div>
+
+</div>
+
+
+<!-- NORMAL CALCULATOR -->
+
+<div class="card normal-card">
+
+<h2>
+➕ Normal Calculator
+</h2>
+
+<input type="number"
+id="number1"
+placeholder="Enter First Number">
+
+<input type="number"
+id="number2"
+placeholder="Enter Second Number">
+
+<button onclick="calculate('+')">
+
+Add +
+
+</button>
+
+<button onclick="calculate('-')">
+
+Subtract −
+
+</button>
+
+<button onclick="calculate('*')">
+
+Multiply ×
+
+</button>
+
+<button onclick="calculate('/')">
+
+Divide ÷
+
+</button>
+
+<div class="result"
+id="calculatorResult">
+
+Result will appear here
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* SETTINGS */
+
+function openSettings() {
+
+document.getElementById(
+"settingsPanel"
+).style.display = "block";
+
+document.getElementById(
+"overlay"
+).style.display = "block";
+
+}
+
+
+function closeSettings() {
+
+document.getElementById(
+"settingsPanel"
+).style.display = "none";
+
+document.getElementById(
+"overlay"
+).style.display = "none";
+
+}
+
+
+/* DARK MODE */
+
+function toggleDarkMode() {
+
+document.body.style.background =
+"#111827";
+
+document.body.style.color =
+"white";
+
+localStorage.setItem(
+"darkMode",
+"true"
+);
+
+}
+
+
+function lightMode() {
+
+document.body.style.background =
+"#eef2ff";
+
+document.body.style.color =
+"#111827";
+
+localStorage.setItem(
+"darkMode",
+"false"
+);
+
+}
+
+
+function resetSettings() {
+
+localStorage.removeItem(
+"darkMode"
+);
+
+document.body.style.background =
+"#eef2ff";
+
+document.body.style.color =
+"#111827";
+
+alert(
+"Settings have been reset."
+);
+
+}
+
+
+/* SHARE */
+
+function shareApp() {
+
+let text =
+"Check out my Smart Calculator app!";
+
+if (navigator.share) {
+
+navigator.share({
+
+title:
+"Smart Calculator",
+
+text:
+text
+
+});
+
+} else {
+
+alert(text);
+
+}
+
+}
+
+
+/* RATE */
+
+function rateApp() {
+
+alert(
+"Thank you for supporting Smart Calculator!"
+);
+
+}
+
+
+/* CONTACT */
+
+function contactDeveloper() {
+
+window.location.href =
+"mailto:satyamkumar78385@gmail.com?subject=Smart Calculator App";
+
+}
+
+
+/* PERCENTAGE */
+
+function calculatePercentage() {
+
+let total =
+parseFloat(
+document.getElementById(
+"totalMarks"
+).value
+);
+
+let obtained =
+parseFloat(
+document.getElementById(
+"obtainedMarks"
+).value
+);
+
+let percentage =
+parseFloat(
+document.getElementById(
+"percentageInput"
+).value
+);
+
+let result = "";
+
+
+if (!isNaN(total) &&
+!isNaN(obtained)) {
+
+if (total <= 0) {
+
+result =
+"Total Marks must be greater than 0";
+
+}
+
+else if (obtained > total) {
+
+result =
+"Obtained Marks cannot be greater than Total Marks";
+
+}
+
+else {
+
+let calculated =
+(obtained / total) * 100;
+
+result =
+"Percentage = " +
+calculated.toFixed(2) +
+"%";
+
+}
+
+}
+
+else if (!isNaN(total) &&
+!isNaN(percentage)) {
+
+let marks =
+(total * percentage) / 100;
+
+result =
+"Obtained Marks = " +
+marks.toFixed(2);
+
+}
+
+else if (!isNaN(obtained) &&
+!isNaN(percentage)) {
+
+let totalMarks =
+(obtained * 100) / percentage;
+
+result =
+"Total Marks = " +
+totalMarks.toFixed(2);
+
+}
+
+else {
+
+result =
+"Enter any two values to calculate the third";
+
+}
+
+
+document.getElementById(
+"percentageResult"
+).innerText =
+result;
+
+}
+
+
+/* DISCOUNT */
+
+function calculateDiscount() {
+
+let price =
+parseFloat(
+document.getElementById(
+"price"
+).value
+);
+
+let discount =
+parseFloat(
+document.getElementById(
+"discount"
+).value
+);
+
+
+if (isNaN(price) ||
+isNaN(discount)) {
+
+document.getElementById(
+"discountResult"
+).innerText =
+"Please enter both values";
+
+return;
+
+}
+
+
+let discountAmount =
+(price * discount) / 100;
+
+let finalPrice =
+price - discountAmount;
+
+
+document.getElementById(
+"discountResult"
+).innerText =
+
+"Discount = ₹" +
+discountAmount.toFixed(2) +
+
+" | Final Price = ₹" +
+finalPrice.toFixed(2);
+
+}
+
+
+/* PRICE FOR GRAMS */
+
+function calculateGramPrice() {
+
+let kgPrice =
+parseFloat(
+document.getElementById(
+"kgPrice"
+).value
+);
+
+let grams =
+parseFloat(
+document.getElementById(
+"grams"
+).value
+);
+
+
+if (isNaN(kgPrice) ||
+isNaN(grams)) {
+
+document.getElementById(
+"gramResult"
+).innerText =
+"Please enter both values";
+
+return;
+
+}
+
+
+let result =
+(kgPrice / 1000) * grams;
+
+
+document.getElementById(
+"gramResult"
+).innerText =
+
+grams +
+" grams = ₹" +
+result.toFixed(2);
+
+}
+
+
+/* MONEY TO GRAMS */
+
+function calculateMoneyToGram() {
+
+let kgPrice =
+parseFloat(
+document.getElementById(
+"kgPrice2"
+).value
+);
+
+let money =
+parseFloat(
+document.getElementById(
+"money"
+).value
+);
+
+
+if (isNaN(kgPrice) ||
+isNaN(money)) {
+
+document.getElementById(
+"moneyResult"
+).innerText =
+"Please enter both values";
+
+return;
+
+}
+
+
+if (kgPrice <= 0) {
+
+document.getElementById(
+"moneyResult"
+).innerText =
+"Kilogram price must be greater than 0";
+
+return;
+
+}
+
+
+let grams =
+(money / kgPrice) * 1000;
+
+
+document.getElementById(
+"moneyResult"
+).innerText =
+
+"₹" +
+money +
+" = " +
+grams.toFixed(2) +
+" grams";
+
+}
+
+
+/* TODAY */
+
+function setToday() {
+
+let today =
+new Date();
+
+let year =
+today.getFullYear();
+
+let month =
+String(
+today.getMonth() + 1
+).padStart(2,"0");
+
+let day =
+String(
+today.getDate()
+).padStart(2,"0");
+
+
+document.getElementById(
+"calculateDate"
+).value =
+
+year +
+"-" +
+month +
+"-" +
+day;
+
+}
+
+
+/* AGE CALCULATOR */
+
+function calculateAge() {
+
+let dob =
+document.getElementById(
+"dateOfBirth"
+).value;
+
+let endDate =
+document.getElementById(
+"calculateDate"
+).value;
+
+
+if (!dob || !endDate) {
+
+document.getElementById(
+"ageResult"
+).innerText =
+"Please enter both dates";
+
+return;
+
+}
+
+
+let birth =
+new Date(
+dob + "T00:00:00"
+);
+
+let end =
+new Date(
+endDate + "T00:00:00"
+);
+
+
+if (birth > end) {
+
+document.getElementById(
+"ageResult"
+).innerText =
+"Date of Birth cannot be after Calculate Date";
+
+return;
+
+}
+
+
+let years =
+end.getFullYear() -
+birth.getFullYear();
+
+let months =
+end.getMonth() -
+birth.getMonth();
+
+let days =
+end.getDate() -
+birth.getDate();
+
+
+if (days < 0) {
+
+months--;
+
+days +=
+new Date(
+end.getFullYear(),
+end.getMonth(),
+0
+).getDate();
+
+}
+
+
+if (months < 0) {
+
+years--;
+
+months += 12;
+
+}
+
+
+let totalMonths =
+years * 12 + months;
+
+let totalDays =
+Math.floor(
+(end - birth) /
+(1000 * 60 * 60 * 24)
+);
+
+
+document.getElementById(
+"ageResult"
+).innerHTML =
+
+"<b>Years:</b> " +
+years +
+
+" &nbsp;&nbsp; " +
+
+"<b>Months:</b> " +
+months +
+
+" &nbsp;&nbsp; " +
+
+"<b>Days:</b> " +
+days +
+
+"<hr>" +
+
+"<b>Total Months:</b> " +
+totalMonths +
+
+"<br>" +
+
+"<b>Total Days:</b> " +
+totalDays;
+
+}
+
+
+/* NORMAL CALCULATOR */
+
+function calculate(operation) {
+
+let a =
+parseFloat(
+document.getElementById(
+"number1"
+).value
+);
+
+let b =
+parseFloat(
+document.getElementById(
+"number2"
+).value
+);
+
+
+if (isNaN(a) ||
+isNaN(b)) {
+
+document.getElementById(
+"calculatorResult"
+).innerText =
+"Please enter both numbers";
+
+return;
+
+}
+
+
+let result;
+
+
+if (operation === "+") {
+
+result =
+a + b;
+
+}
+
+else if (operation === "-") {
+
+result =
+a - b;
+
+}
+
+else if (operation === "*") {
+
+result =
+a * b;
+
+}
+
+else if (operation === "/") {
+
+if (b === 0) {
+
+document.getElementById(
+"calculatorResult"
+).innerText =
+"Cannot divide by zero";
+
+return;
+
+}
+
+result =
+a / b;
+
+}
+
+
+document.getElementById(
+"calculatorResult"
+).innerText =
+"Result = " +
+result;
+
+}
+
+</script>
+
+</body>
+</html>
